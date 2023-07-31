@@ -22,19 +22,24 @@ export const Todo = () => {
 	// }, [])
 	// console.log(editSection);
 
-	const inputHandleOnChange = (event) => {
-		setTempContent(event.target.value);
-	};
+	const [temp,inputHandleOnChange]=useInput();
+	console.log(temp);
+
+	// const inputHandleOnChange = (event) => {
+	// 	setTempContent(event.target.value);
+	// };
 
 	// For todo-Item adding
 	const handleInputOnAdd = () => {
-		if (tempContent === "") {
+		if (temp === "") {
 			setError((prev) => ({ ...prev, addTodo: true }));
 			return;
 		}
 		setError((prev) => ({ ...prev, addTodo: false }));
-		setTodoContent((prev) => [...prev, tempContent]);
-		setTempContent("");
+		// setTodoContent((prev) => [...prev, tempContent]);
+		setTodoContent((prev) => [...prev, temp]);
+		// setTempContent("");
+		// inputHandleOnChange('');
 		setEditSection([...editSection, false]);
 	};
 
@@ -146,7 +151,8 @@ export const Todo = () => {
 					<input
 						type="text"
 						name="addTodo"
-						value={tempContent}
+						// value={tempContent}
+						value={temp}
 						id="newTodo"
 						placeholder="New Todo"
 						onChange={inputHandleOnChange}
