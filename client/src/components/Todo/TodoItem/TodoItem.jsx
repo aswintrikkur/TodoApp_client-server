@@ -1,7 +1,7 @@
-import React, { Children, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import './TodoItem.css'
 
-export const TodoItem = ({ todoContent, deleteCurrentItem, handleItemEdit, editSection, index, children }) => {
+export const TodoItem = ({ todoContent, deleteCurrentItem, handleItemEdit, editSection, id, children }) => {
     const [completed, setCompleted] = useState({})
 
     //     task Complete checkbox handle
@@ -12,16 +12,16 @@ export const TodoItem = ({ todoContent, deleteCurrentItem, handleItemEdit, editS
             setCompleted({ textDecoration: 'none' });
         }
     }
-    // console.log( `${index} = ${editSection}`)
+    // console.log( `${id} = ${editSection}`)
 
 
     return (
         <div>
-            <div className="todo-item" >
+            <div className="todo-item"  >
                 {editSection&&children}
                 <div className="todo-label" >
-                    <input type="checkbox" name="" id={index} onClick={handleComplete} />
-                    <label htmlFor={index} style={completed} > {todoContent} </label>
+                    <input type="checkbox" name="" id={id} onClick={handleComplete} />
+                    <label htmlFor={id} style={completed} > {todoContent} </label>
                 </div>
                 <div className="todo-buttons">
                     <button onClick={handleItemEdit}><img src='../src/Images/image 7.png' alt="edit" /></button>
