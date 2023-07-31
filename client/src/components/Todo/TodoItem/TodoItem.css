@@ -1,0 +1,25 @@
+.todo-item {
+    width: 500px;
+	height: 75px;
+    padding: 0 36px;
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* border-top: 1px dashed rgba(143, 168, 193, 0.3);; */
+    border-bottom: 1px dashed rgba(143, 168, 193, 0.3);
+    position: relative;
+}
+.todo-item .todo-label label{
+cursor: pointer;
+padding-left: 20px;
+}
+.todo-item .todo-buttons button {
+	background: none;
+	border: none;
+    margin-left: 11px;    
+}
+.todo-buttons button image {
+	width: 23px;
+	height: 23px;
+}
+
