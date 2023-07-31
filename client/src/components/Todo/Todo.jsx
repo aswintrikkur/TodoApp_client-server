@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Todo.css";
 import { TodoItem } from "./TodoItem/TodoItem";
+import { useInput } from "../../hooks/useInput";
 
 export const Todo = () => {
 	const [todoContent, setTodoContent] = useState([]);
@@ -13,6 +14,7 @@ export const Todo = () => {
 		addTodo: false,
 		editTodo: false,
 	});
+
 
 	// useEffect(() => {
 	//     const newArray = Array(10).fill(false);
