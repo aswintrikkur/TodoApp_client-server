@@ -98,27 +98,6 @@ export const Todo = () => {
 			newEditSection[index] = !newEditSection[index]; // Update the value at the given index
 			return newEditSection;
 		});
-
-		// //trail 1 (failed)
-		/*  setEditSection(prev => {
-            prev.splice(index, 1, (prev[index] =!prev[index]))
-            prev.splice(index, 1, (editSection[index] === false ? true : false)) //not working
-            // console.log('editSection', prev);
-            return prev;
-        });     
-        // setEditSection(prev=>(prev.filter(data=>data)));  //not rendering without 2nd setEditSection()
-        */
-
-		//trail 2 (failed)
-		/* const updatedState= editSection.splice(index, 1, (editSection[index] === false ? true : false))
-        console.log('editSection: ',editSection);
-        console.log('updatedState: ',updatedState);
-        setEditSection(prev=>prev);
-        const filterData = editSection.map((data) => {
-            console.log(data);
-            return data
-        })
-        setEditSection(filterData);     */
 	};
 
 	//for cancel handle

@@ -7,20 +7,29 @@ export const Todo = () => {
 	//----------State Declarations----------------
 	const [todo, setTodo] = useState([]);
 	const [tempContent, setTempContent] = useState("");
-	const [tempEdit, setTempEdit] = useState("");
-	const [editSection, setEditSection] = useState(false);
+	const [tempEdit, setTempEdit] = useState([]);
 	const [error, setError] = useState({
 		addTodo: false,
 		editTodo: false,
 	});
 
+	//-----------useEffect------------
+	// useEffect(() => {
+	// 	console.log(todo);
+	// 	const data = JSON.parse(localStorage.getItem("todo"));
+	// 	console.log("todo==", data);
+	// 	data && setTodo(data.map((data) => data));
+	// 	// console.log(data.map((data) => data.content));
+	// }, []);
+
 	useEffect(() => {
-		console.log(todo);
-	}, [todo]);
+		console.log("tempEdit==", tempEdit);
+		console.log("todo==", todo);
+	}, [todo, tempEdit]);
 
 	//----------Functions Definitions----------------
 
-	//addTodo-input handle
+	// onChange input handle of addTodo
 	const inputHandleOnChange = (event) => {
 		setTempContent(event.target.value);
 	};
@@ -28,7 +37,7 @@ export const Todo = () => {
 	// handle 'ADD TODO' button
 	const handleInputOnAdd = () => {
 		if (tempContent === "") {
-			setError((prev) => ({ ...prev, addTodo: "please enter some content" }));
+			setError((prev) => ({ ...prev, addTodo: "please enter a task" }));
 			return;
 		}
 		setError((prev) => ({ ...prev, addTodo: false }));
@@ -37,38 +46,87 @@ export const Todo = () => {
 				{
 					id: uuid().slice(0, 8),
 					content: tempContent,
+					isComplete: false,
+					isEditable: false,
 				},
 				...prev,
 			];
+			setTempEdit((prev) => [newTodo[0].content, ...prev]);
+			// localStorage.setItem("todo", JSON.stringify(newTodo));
 			return newTodo;
 		});
 		setTempContent("");
 	};
 
 	// 'Enter' button handle
-	const handleKeyDown = (event) => {
+	const handleKeyDown = (event, id, index) => {
 		const { key } = event;
-		if (key === "Enter") {
+		const { name } = event.target;
+
+		if (key === "Enter" && name === "addTodo") {
 			handleInputOnAdd();
+		}
+		if (key === "Enter" && name === "editTodo") {
+			handleSaveValue(id, index);
 		}
 	};
 
 	// Handle Todo-Item Delete
-	const deleteCurrentItem = () => {};
+	const handleDeleteItem = () => {};
 
 	//Handle Todo-Item Edit
-	const handleItemEdit = () => {
-		setEditSection(true);
+	const handleItemEdit = (id) => {
+		const editTodo = todo.map((data) => {
+			data.id === id && (data.isEditable = !data.isEditable);
+			return data;
+		});
+		setTodo(editTodo);
 	};
 
-	//input handling of Edit
-	const inputHandleOnChangeOfEdit = () => {};
+	// onChange input handle of editTodo
+	const inputHandleOnChangeOfEdit = (event, id, index) => {
+		const updatedTempEdit = [...tempEdit];
+		updatedTempEdit[index] = event.target.value;
+		setTempEdit(updatedTempEdit);
+	};
 
 	//Handle 'Save' on Todo-Items
-	const handleSaveValue = () => {};
+	const handleSaveValue = (id, index) => {
+		const updatedTodo = todo.map((data) => {
+			if (data.id === id) {
+				if(tempEdit[index]===''){
+					setError(prev=>({...prev,editTodo:'please enter some content'}));
+				}else{					
+					setError(prev=>({...prev,editTodo:false}));
+					data.content = tempEdit[index];
+					data.isEditable = false;
+				}
+			}
+
+			return data;
+		});
+		setTodo(updatedTodo);
+	};
 
 	//Handle 'Cancel' on Todo-Items
-	const handleCancelButton = () => {};
+	const handleCancelButton = (id, index) => {
+		const updatedTodo = todo.map((data) => {
+			data.id === id && ((tempEdit[index] = data.content), (data.isEditable = false));
+			return data;
+		});
+		setTodo(updatedTodo);
+	};
+
+	// Handle task complete
+	const handleComplete = (event, id) => {
+		const todoUpdated = todo.map((data) => {
+			if (data.id === id) {
+				event.target.checked ? (data.isComplete = true) : (data.isComplete = false);
+			}
+			return data;
+		});
+		setTodo(todoUpdated);
+	};
 
 	return (
 		<div>
@@ -92,34 +150,35 @@ export const Todo = () => {
 				</div>
 
 				<div className="todo-list">
-					{todo.map((data) => {
+					{todo.map((data, index) => {
 						const { id } = data;
-						// console.log(id);
+
 						return (
 							<TodoItem
-								todoContent={data.content}
-								deleteCurrentItem={deleteCurrentItem}
+								handleDeleteItem={handleDeleteItem}
 								handleItemEdit={handleItemEdit}
-								editSection={editSection}
-								id={data.id}
+								handleComplete={handleComplete}
+								todo={data}
+								error={error}
 								key={data.id}
 							>
 								<div className="edit-todo" /* passing as children */>
 									<input
 										type="text"
-										name=""
+										name="editTodo"
 										id="edit-item"
-										value={tempEdit[data.id]}
+										value={tempEdit[index]}
 										onChange={(event) => {
-											inputHandleOnChangeOfEdit(id, event);
+											inputHandleOnChangeOfEdit(event, id, index);
 										}}
+										onKeyDown={(event) => handleKeyDown(event, id, index)}
 										placeholder="Editing current todo item"
 									/>
 									<button
 										type="save"
 										className="save"
 										onClick={() => {
-											handleSaveValue(id);
+											handleSaveValue(id, index);
 										}}
 									>
 										save
@@ -129,13 +188,13 @@ export const Todo = () => {
 										type="reset"
 										className="cancel"
 										onClick={() => {
-											handleCancelButton(data.id);
+											handleCancelButton(id, index);
 										}}
 									>
 										cancel
 									</button>
 								</div>
-								{error.editTodo && <p className="error-message error-message-edit"> Please enter some content </p>}
+								{/* {error.editTodo && <p className="error-message error-message-edit"> {error.editTodo} </p>} */}
 							</TodoItem>
 						);
 					})}
