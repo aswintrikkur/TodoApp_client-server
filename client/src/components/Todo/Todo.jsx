@@ -4,11 +4,11 @@ import { v4 as uuid } from "uuid";
 import { TodoItem } from "./TodoItem/TodoItem";
 
 export const Todo = () => {
-//----------State Declarations----------------
-const [todo, setTodo] = useState([]);
-const [tempContent, setTempContent] = useState("");
+	//----------State Declarations----------------
+	const [todo, setTodo] = useState([]);
+	const [tempContent, setTempContent] = useState("");
 	const [tempEdit, setTempEdit] = useState("");
-	const [editSection,setEditSection]=useState(false);
+	const [editSection, setEditSection] = useState(false);
 	const [error, setError] = useState({
 		addTodo: false,
 		editTodo: false,
@@ -17,8 +17,7 @@ const [tempContent, setTempContent] = useState("");
 	useEffect(() => {
 		console.log(todo);
 	}, [todo]);
-	
-	
+
 	//----------Functions Definitions----------------
 
 	//addTodo-input handle
@@ -93,41 +92,53 @@ const [tempContent, setTempContent] = useState("");
 				</div>
 
 				<div className="todo-list">
-					{todo.map((data) => (
-						<TodoItem
-							todoContent={data.content}
-							deleteCurrentItem={deleteCurrentItem}
-							handleItemEdit={handleItemEdit}
-							editSection={editSection}
-							id={data.id}
-							key={data.id}
-						>
-							<div className="edit-todo" /* passing as children */>
-								<input
-									type="text"
-									name=""
-									id="edit-item"
-									// value={tempEdit[data.id]}
-									onChange={(event) => {
-										inputHandleOnChangeOfEdit(id, event);
-									}}
-									placeholder="Editing current todo item"
-								/>
-								<button
-									type="save"
-									className="save"
-									onClick={() => {handleSaveValue(id);}}
-								>save</button>
+					{todo.map((data) => {
+						const { id } = data;
+						// console.log(id);
+						return (
+							<TodoItem
+								todoContent={data.content}
+								deleteCurrentItem={deleteCurrentItem}
+								handleItemEdit={handleItemEdit}
+								editSection={editSection}
+								id={data.id}
+								key={data.id}
+							>
+								<div className="edit-todo" /* passing as children */>
+									<input
+										type="text"
+										name=""
+										id="edit-item"
+										value={tempEdit[data.id]}
+										onChange={(event) => {
+											inputHandleOnChangeOfEdit(id, event);
+										}}
+										placeholder="Editing current todo item"
+									/>
+									<button
+										type="save"
+										className="save"
+										onClick={() => {
+											handleSaveValue(id);
+										}}
+									>
+										save
+									</button>
 
-								<button
-									type="reset"
-									className="cancel"
-									onClick={() => {handleCancelButton(id);}}
-								>cancel</button>
-							</div>
-							{error.editTodo && <p className="error-message error-message-edit"> Please enter some content </p>}
-						</TodoItem>
-					))}
+									<button
+										type="reset"
+										className="cancel"
+										onClick={() => {
+											handleCancelButton(data.id);
+										}}
+									>
+										cancel
+									</button>
+								</div>
+								{error.editTodo && <p className="error-message error-message-edit"> Please enter some content </p>}
+							</TodoItem>
+						);
+					})}
 				</div>
 			</div>
 		</div>
