@@ -10,17 +10,7 @@ export const Todo = () => {
 	const [tempEdit, setTempEdit] = useState([]);
 	const [error, setError] = useState({
 		addTodo: false,
-		editTodo: false,
 	});
-
-	//-----------useEffect------------
-	// useEffect(() => {
-	// 	console.log(todo);
-	// 	const data = JSON.parse(localStorage.getItem("todo"));
-	// 	console.log("todo==", data);
-	// 	data && setTodo(data.map((data) => data));
-	// 	// console.log(data.map((data) => data.content));
-	// }, []);
 
 	useEffect(() => {
 		console.log("tempEdit==", tempEdit);
@@ -48,11 +38,11 @@ export const Todo = () => {
 					content: tempContent,
 					isComplete: false,
 					isEditable: false,
+					errorMessage: false,
 				},
 				...prev,
 			];
 			setTempEdit((prev) => [newTodo[0].content, ...prev]);
-			// localStorage.setItem("todo", JSON.stringify(newTodo));
 			return newTodo;
 		});
 		setTempContent("");
@@ -72,7 +62,12 @@ export const Todo = () => {
 	};
 
 	// Handle Todo-Item Delete
-	const handleDeleteItem = () => {};
+	const handleDeleteItem = (id) => {
+		const updatedTodo = todo.filter((data) => data.id !== id);
+		setTodo(updatedTodo);
+		const updatedContent = updatedTodo.map((data) => data.content);
+		setTempEdit(updatedContent);
+	};
 
 	//Handle Todo-Item Edit
 	const handleItemEdit = (id) => {
@@ -94,10 +89,10 @@ export const Todo = () => {
 	const handleSaveValue = (id, index) => {
 		const updatedTodo = todo.map((data) => {
 			if (data.id === id) {
-				if(tempEdit[index]===''){
-					setError(prev=>({...prev,editTodo:'please enter some content'}));
-				}else{					
-					setError(prev=>({...prev,editTodo:false}));
+				if (tempEdit[index] === "") {
+					data.errorMessage = "task should not be empty";
+				} else {
+					data.errorMessage = false;
 					data.content = tempEdit[index];
 					data.isEditable = false;
 				}
@@ -111,7 +106,7 @@ export const Todo = () => {
 	//Handle 'Cancel' on Todo-Items
 	const handleCancelButton = (id, index) => {
 		const updatedTodo = todo.map((data) => {
-			data.id === id && ((tempEdit[index] = data.content), (data.isEditable = false));
+			data.id === id && ((tempEdit[index] = data.content), (data.isEditable = false), (data.errorMessage = false));
 			return data;
 		});
 		setTodo(updatedTodo);
@@ -159,7 +154,6 @@ export const Todo = () => {
 								handleItemEdit={handleItemEdit}
 								handleComplete={handleComplete}
 								todo={data}
-								error={error}
 								key={data.id}
 							>
 								<div className="edit-todo" /* passing as children */>
@@ -194,7 +188,7 @@ export const Todo = () => {
 										cancel
 									</button>
 								</div>
-								{/* {error.editTodo && <p className="error-message error-message-edit"> {error.editTodo} </p>} */}
+								{data.errorMessage && <p className="error-message error-message-edit"> {data.errorMessage} </p>}
 							</TodoItem>
 						);
 					})}

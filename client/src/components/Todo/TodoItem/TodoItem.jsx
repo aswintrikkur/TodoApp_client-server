@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./TodoItem.css";
 
-export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, todo, error, children }) => {
+export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, todo, children }) => {
 	const { id, content, isEditable, isComplete } = todo;
 
 	// console.log( `${id} = ${editSection}`)
@@ -24,7 +24,6 @@ export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, tod
 						<img src="../src/Images/image 9.png" alt="delete" />
 					</button>
 				</div>
-				{error.editTodo && <p className="error-message error-message-edit">{error.editTodo} </p>}
 				{/* {error.editTodo && children[1]} */}
 				{/* {error && <p className="error-message error-message-edit"> Please enter some content </p>} */}
 			</div>
