@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./Todo.css";
 import { v4 as uuid } from "uuid";
 import { TodoItem } from "./TodoItem/TodoItem";
+import axios from "axios";
+import { API_URL, postTodoListAPI } from "../../api";
 
 export const Todo = () => {
 	//----------State Declarations----------------
@@ -17,6 +19,17 @@ export const Todo = () => {
 		console.log("todo==", todo);
 	}, [todo, tempEdit]);
 
+	//--------todo API data fetching----------
+	const fetchTodoListAPI = async () => {
+		const response = await axios(API_URL);
+		setTodo(response.data);
+		setTempEdit(response.data.map((data) => data.content));
+	};
+
+	useEffect(() => {
+		fetchTodoListAPI();
+	}, []);
+
 	//----------Functions Definitions----------------
 
 	// onChange input handle of addTodo
@@ -25,26 +38,24 @@ export const Todo = () => {
 	};
 
 	// handle 'ADD TODO' button
-	const handleInputOnAdd = () => {
+	const handleInputOnAdd = async (index) => {
 		if (tempContent === "") {
 			setError((prev) => ({ ...prev, addTodo: "please enter a task" }));
 			return;
 		}
-		setError((prev) => ({ ...prev, addTodo: false }));
-		setTodo((prev) => {
-			const newTodo = [
-				{
-					id: uuid().slice(0, 8),
-					content: tempContent,
-					isComplete: false,
-					isEditable: false,
-					errorMessage: false,
-				},
-				...prev,
-			];
-			setTempEdit((prev) => [newTodo[0].content, ...prev]);
-			return newTodo;
-		});
+		try {
+			setError((prev) => ({ ...prev, addTodo: false }));
+			const response = await postTodoListAPI("POST", {
+				content: tempContent,
+				isComplete: false,
+				isEditable: false,
+				errorMessage: false,
+			});
+			setTodo(response.data);
+			fetchTodoListAPI();
+		} catch (error) {
+			console.log(error);
+		}
 		setTempContent("");
 	};
 
@@ -62,15 +73,31 @@ export const Todo = () => {
 	};
 
 	// Handle Todo-Item Delete
-	const handleDeleteItem = (id) => {
-		const updatedTodo = todo.filter((data) => data.id !== id);
-		setTodo(updatedTodo);
-		const updatedContent = updatedTodo.map((data) => data.content);
-		setTempEdit(updatedContent);
+	const handleDeleteItem = async (id) => {
+		try {
+			const response = await postTodoListAPI("DELETE", {
+				id,
+			});
+			setTodo(response.data);
+			const updatedContent = response.data.map((data) => data.content);
+			setTempEdit(updatedContent);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	//Handle Todo-Item Edit
-	const handleItemEdit = (id) => {
+	const handleItemEdit = async (id) => {   /*fix multiple edit-save bug*/
+		// try {
+		// 	const response= await postTodoListAPI('PUT',{
+		// 		id,
+		// 		isEditable:true		
+		// 	})
+		// 	setTodo(response.data);
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+
 		const editTodo = todo.map((data) => {
 			data.id === id && (data.isEditable = !data.isEditable);
 			return data;
@@ -86,21 +113,16 @@ export const Todo = () => {
 	};
 
 	//Handle 'Save' on Todo-Items
-	const handleSaveValue = (id, index) => {
-		const updatedTodo = todo.map((data) => {
-			if (data.id === id) {
-				if (tempEdit[index] === "") {
-					data.errorMessage = "task should not be empty";
-				} else {
-					data.errorMessage = false;
-					data.content = tempEdit[index];
-					data.isEditable = false;
-				}
-			}
-
-			return data;
-		});
-		setTodo(updatedTodo);
+	const handleSaveValue = async (id, index) => {
+		try {
+			const response = await postTodoListAPI("PUT", {
+				id,
+				content: tempEdit[index],
+			});
+			setTodo(response.data);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	//Handle 'Cancel' on Todo-Items

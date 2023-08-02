@@ -14,7 +14,7 @@ app.listen(PORT, () => {
 //------------data------------
 let todoList = [];
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.json(todoList);
 })
 
@@ -33,14 +33,36 @@ app.post('/api/todo', (req, res) => {
     res.json(todoList);
 });
 
-app.put('/api/todo', (req, res) => {
-    const { content, id, ...rest } = req.body;
+//handle Edit       /*fix multiple edit-save bug*/
+// app.put('/api/todo',(req,res)=>{
+//     const{id,isEditable}=req.body;
+//     const updatedTodoList = todoList.map(data => {
+//         if (data.id === id) {
+//             data.isEditable=isEditable;
+//         }
+//         return data;
+//     })
+//     todoList = [...updatedTodoList];
+//     res.json(todoList);
+// });
+
+
+app.put('/api/todo', (req, res) => { //handle Save
+    const { id, content,isEditable } = req.body;
     const updatedTodoList = todoList.map(data => {
-        data.id === id && (data.content = content);
+        if (data.id === id) {
+            if (content == '') {
+                data.errorMessage = 'task should not be empty';
+                data.isEditable = true;
+            } else {
+                data.content = content;
+                data.isEditable = false;
+                data.errorMessage = false;
+            }
+        }
         return data;
     })
     todoList = [...updatedTodoList];
-
     res.json(todoList);
 });
 
