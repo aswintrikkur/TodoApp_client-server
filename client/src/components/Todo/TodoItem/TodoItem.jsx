@@ -12,7 +12,7 @@ export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, tod
 				{isEditable && children}
 				<div className="todo-label">
 					<div style={{display:'flex', textAlign:'start', wordBreak:'break-all' }}>
-					<input type="checkbox" name="" id={id} onClick={(event) => handleComplete(event, id)} />
+					<input type="checkbox" name=""  id={id} onClick={(event) => handleComplete(event, id)} />
 						<label htmlFor={id} style={{ textDecoration: isComplete ? "line-through" : "none" }}>
 							{content}
 						</label>

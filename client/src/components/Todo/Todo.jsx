@@ -32,6 +32,7 @@ export const Todo = () => {
 
 	useEffect(() => {
 		fetchTodoListAPI();
+		handleComplete();
 	}, []);
 
 	//----------Functions Definitions----------------
@@ -125,10 +126,7 @@ export const Todo = () => {
 			const response = await postTodoListAPI("PUT", {
 				id,
 				content: tempEdit[index],
-				isComplete: todo.map(data=> {
-					if(data.id===id){
-						return data.isComplete;
-					}})
+				isComplete: todo.find(data=> (data.id==id)).isComplete
 			});
 			setTodo(response.data);
 		} catch (error) {
@@ -150,6 +148,7 @@ export const Todo = () => {
 	const handleComplete = (event, id) => {
 		const todoUpdated = todo.map((data) => {
 			if (data.id === id) {
+				console.log(event);
 				event.target.checked ? (data.isComplete = true) : (data.isComplete = false);
 			}
 			return data;
@@ -172,7 +171,7 @@ export const Todo = () => {
 						onChange={inputHandleOnChange}
 						onKeyDown={handleKeyDown}
 					/>
-					<button type="submit" onClick={handleInputOnAdd} style={{zIndex:3}}>
+					<button type="submit" onClick={handleInputOnAdd} >
 						+
 					</button>
 					{error.addTodo && <p className="error-message"> {error.addTodo} </p>}
