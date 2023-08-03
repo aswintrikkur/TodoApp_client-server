@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
+const { compareArray } = require('./util');
 
 const app = express();
 app.use(express.json());
@@ -8,7 +9,7 @@ app.use(cors());
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`server started in ${PORT}`);
+    console.log(`-----server started in ${PORT}-----`);
 })
 
 //------------data------------
@@ -25,8 +26,20 @@ app.get('/api/todo', (req, res) => {
 });
 
 app.post('/api/todo', (req, res) => {
-
     const { ...rest } = req.body;
+
+    //Error message to client
+    const exptectedProperties = ['content', 'isComplete', 'isEditable', 'errorMessage'];
+    const properties = Object.keys(req.body);
+    const missingProperties = compareArray(exptectedProperties, properties);
+    if (missingProperties.length !== 0) {
+
+        res.status(400).json({
+            message: `missing properties : ${missingProperties} `
+        })
+        return;
+    }
+
     rest.id = uuidv4().slice(0, 8);
     todoList.push(rest)
 
@@ -48,7 +61,20 @@ app.post('/api/todo', (req, res) => {
 
 
 app.put('/api/todo', (req, res) => { //handle Save
-    const { id, content,isEditable } = req.body;
+    const { id, content } = req.body;
+
+    //Error message to client
+    const exptectedProperties = ['id', 'content'];
+    const properties = Object.keys(req.body);
+    const missingProperties = compareArray(exptectedProperties, properties);
+    if (missingProperties.length !== 0) {
+        res.status(400).json({
+            message: `missing properties : ${missingProperties} `
+        })
+        return;
+    }
+
+
     const updatedTodoList = todoList.map(data => {
         if (data.id === id) {
             if (content == '') {
@@ -68,6 +94,18 @@ app.put('/api/todo', (req, res) => { //handle Save
 
 app.delete('/api/todo', (req, res) => {
     const { id } = req.body;
+
+    //Error message to client
+    const exptectedProperties = ['id'];
+    const properties = Object.keys(req.body);
+    const missingProperties = compareArray(exptectedProperties, properties);
+    if (missingProperties.length !== 0) {
+        res.status(400).json({
+            message: `missing properties : ${missingProperties} `
+        })
+        return;
+    }
+
     const updatedTodoList = todoList.filter(data => {
         return data.id !== id
     });
@@ -78,3 +116,12 @@ app.delete('/api/todo', (req, res) => {
 app.all('*', (req, res) => {
     res.json(`API does not exist`);
 })
+
+
+//*******TEST*********
+// let data ;
+// console.log(typeof(data));
+// const a = ['id'];
+// const b = Object.keys(data);
+// const result = compareArray(a, b);
+// console.log(result);

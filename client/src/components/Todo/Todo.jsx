@@ -21,9 +21,13 @@ export const Todo = () => {
 
 	//--------todo API data fetching----------
 	const fetchTodoListAPI = async () => {
-		const response = await axios(API_URL);
-		setTodo(response.data);
-		setTempEdit(response.data.map((data) => data.content));
+		try {
+			const response = await axios(API_URL);
+			setTodo(response.data);
+			setTempEdit(response.data.map((data) => data.content));
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
@@ -52,9 +56,10 @@ export const Todo = () => {
 				errorMessage: false,
 			});
 			setTodo(response.data);
-			fetchTodoListAPI();
+			setTempEdit(response.data.map((data) => data.content));
 		} catch (error) {
 			console.log(error);
+			console.log(`ERROR === ${error.response.data.message}`);
 		}
 		setTempContent("");
 	};
@@ -83,15 +88,17 @@ export const Todo = () => {
 			setTempEdit(updatedContent);
 		} catch (error) {
 			console.log(error);
+			console.log(`ERROR === ${error.response.data.message}`);
 		}
 	};
 
 	//Handle Todo-Item Edit
-	const handleItemEdit = async (id) => {   /*fix multiple edit-save bug*/
+	const handleItemEdit = async (id) => {
+		/*fix multiple edit-save bug*/
 		// try {
 		// 	const response= await postTodoListAPI('PUT',{
 		// 		id,
-		// 		isEditable:true		
+		// 		isEditable:true
 		// 	})
 		// 	setTodo(response.data);
 		// } catch (error) {
@@ -122,6 +129,7 @@ export const Todo = () => {
 			setTodo(response.data);
 		} catch (error) {
 			console.log(error);
+			console.log(`ERROR === ${error.response.data.message}`)
 		}
 	};
 
