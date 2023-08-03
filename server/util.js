@@ -6,7 +6,7 @@ const compareArray = (arr1, arr2) => {
         return notFound = [...arr1];
     }
     for (i = 0; i < arr1.length; i++) {
-        for (j = 0; j < arr2.length; j++) {
+        for (j = 0; j < arr2.length; j++) {   //check elements in array using 'in'
             if (arr1[i] == arr2[j]) {
                 flag = 1;  // console.log('found', arr1[i]);
             }
@@ -19,6 +19,16 @@ const compareArray = (arr1, arr2) => {
     return notFound;
 }
 
+const handleErrorMessage=(expectedProp,received)=>{
+    const receivedProp = Object.keys(received);
+    const missingProperties = compareArray(expectedProp, receivedProp);
+    if (missingProperties.length !== 0) {
+
+        return missingProperties;
+    }
+    return false;
+}
 
 
-module.exports = { compareArray };
+
+module.exports = { compareArray, handleErrorMessage };

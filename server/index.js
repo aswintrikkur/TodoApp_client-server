@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
-const { compareArray } = require('./util');
+const { compareArray, handleErrorMessage } = require('./util');
 
 const app = express();
 app.use(express.json());
@@ -29,16 +29,11 @@ app.post('/api/todo', (req, res) => {
     const { ...rest } = req.body;
 
     //Error message to client
-    const exptectedProperties = ['content', 'isComplete', 'isEditable', 'errorMessage'];
-    const properties = Object.keys(req.body);
-    const missingProperties = compareArray(exptectedProperties, properties);
-    if (missingProperties.length !== 0) {
-
-        res.status(400).json({
-            message: `missing properties : ${missingProperties} `
-        })
-        return;
-    }
+    const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
+    const missingProps = handleErrorMessage(expectedProp, req.body);
+    missingProps && res.status(400).json({
+        message: `missing properties : ${missingProps} `
+    });
 
     rest.id = uuidv4().slice(0, 8);
     todoList.push(rest)
@@ -64,16 +59,11 @@ app.put('/api/todo', (req, res) => { //handle Save
     const { id, content } = req.body;
 
     //Error message to client
-    const exptectedProperties = ['id', 'content'];
-    const properties = Object.keys(req.body);
-    const missingProperties = compareArray(exptectedProperties, properties);
-    if (missingProperties.length !== 0) {
-        res.status(400).json({
-            message: `missing properties : ${missingProperties} `
-        })
-        return;
-    }
-
+    const expectedProp = ['id', 'content'];
+    const missingProps = handleErrorMessage(expectedProp, req.body);
+    missingProps && res.status(400).json({
+        message: `missing properties : ${missingProps} `
+    });
 
     const updatedTodoList = todoList.map(data => {
         if (data.id === id) {
@@ -96,15 +86,11 @@ app.delete('/api/todo', (req, res) => {
     const { id } = req.body;
 
     //Error message to client
-    const exptectedProperties = ['id'];
-    const properties = Object.keys(req.body);
-    const missingProperties = compareArray(exptectedProperties, properties);
-    if (missingProperties.length !== 0) {
-        res.status(400).json({
-            message: `missing properties : ${missingProperties} `
-        })
-        return;
-    }
+    const expectedProp = ['id'];
+    const missingProps = handleErrorMessage(expectedProp, req.body);
+    missingProps && res.status(400).json({
+        message: `missing properties : ${missingProps} `
+    });
 
     const updatedTodoList = todoList.filter(data => {
         return data.id !== id
