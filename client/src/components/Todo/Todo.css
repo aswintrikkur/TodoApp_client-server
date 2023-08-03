@@ -1,6 +1,8 @@
 .todo-container {
-	width: 500px;
-	height: 612px;
+	/* width: 500px; */
+	width: 100vw;
+	/* height: 612px; */
+	height: 100vh;
 	background: #152431;
 	border-radius: 6px;
 	display: flex;
@@ -10,16 +12,19 @@
 }
 .todo-container h2 {
 	/* font-family: Roboto; */
-	font-size: 36px;
+	font-size: 40px;
 	font-weight: 700;
 	line-height: 42px;
 	letter-spacing: 0em;
 	text-align: left;
 	color: rgba(143, 168, 193, 1);
-	margin-top: 27px;
+	margin: 50px;
 }
 .todo-container .input-container {
-	margin-top: 36px;
+	/* margin-top: 36px; */
+	/* background-color: antiquewhite; */
+	display: flex;
+	position:relative;
 }
 .input-container #newTodo {
 	width: 297px;
@@ -30,27 +35,38 @@
 	padding-left: 15px;
 }
 .input-container button {
-	width: 95px;
+	width: 40px;
 	height: 40px;
 	border-radius: 4px;
-	margin-left: 8px;
+	margin-left: 10px;
 	background: #0c5488;
 
 	/* font-family: 'Roboto'; */
 	font-style: normal;
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 24px;
 	line-height: 16px;
 	border: 1px solid rgba(255, 255, 255, 0.2);
 	color: #8fa8c1;
 }
+.input-container p{
+	display: none;
+}
+.input-container button:focus ~ p{
+	/* display: contents; */
+	/* visibility: vissible; */
+	display: inline;
+}
 .todo-list {
-	padding-top: 40px;
-	overflow: auto;
+    margin-top: 60px ;
+	margin-bottom: 30px;
+	/* background-color: gray; */
+	/* padding-top: 40px; */
+	overflow-y: auto;
 }
 .edit-todo {
-	width: 500px;
-	height: 68px;
+	width: 380px;
+	height: 100%;
 	background: #152431;
 
 	position: absolute;
@@ -61,15 +77,16 @@
 	gap: 9px;
 }
 .edit-todo input {
-	width: 234px;
+	width: 280px;
 	height: 40px;
 	border: 1px solid rgba(143, 168, 193, 0.5);
 	border-radius: 4px;
 	background-color: transparent;
-	padding-left: 15px;
+	/* padding-left: 15px; */
+	padding: 0 15px;
 }
 .edit-todo button{
-width: 76px;
+width: 40px;
 height: 40px;
 background: #0C5488;
 border-radius: 4px;
@@ -89,9 +106,11 @@ border: 1px solid rgba(255, 255, 255, 0.2)
 
 .error-message{
 	color: red;
-	font-size: 14px;
+	font-size: 12px;
 	text-align: start;
-	padding-left: 20px;
+	padding-left: 10px;
+	bottom: -18px;
+
 	position: absolute;
 }
 .error-message-edit{

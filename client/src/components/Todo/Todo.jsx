@@ -125,6 +125,10 @@ export const Todo = () => {
 			const response = await postTodoListAPI("PUT", {
 				id,
 				content: tempEdit[index],
+				isComplete: todo.map(data=> {
+					if(data.id===id){
+						return data.isComplete;
+					}})
 			});
 			setTodo(response.data);
 		} catch (error) {
@@ -155,7 +159,7 @@ export const Todo = () => {
 
 	return (
 		<div>
-			<div className="todo-container">
+			<div className="todo-container" >
 				<h2>Todo List</h2>
 
 				<div className="input-container">
@@ -168,8 +172,8 @@ export const Todo = () => {
 						onChange={inputHandleOnChange}
 						onKeyDown={handleKeyDown}
 					/>
-					<button type="submit" onClick={handleInputOnAdd}>
-						ADD TODO
+					<button type="submit" onClick={handleInputOnAdd} style={{zIndex:3}}>
+						+
 					</button>
 					{error.addTodo && <p className="error-message"> {error.addTodo} </p>}
 				</div>

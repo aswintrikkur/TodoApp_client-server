@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = 3000;
+const PORT = 4000;
 app.listen(PORT, () => {
     console.log(`-----server started in ${PORT}-----`);
 })
@@ -56,10 +56,10 @@ app.post('/api/todo', (req, res) => {
 
 
 app.put('/api/todo', (req, res) => { //handle Save
-    const { id, content } = req.body;
+    const { id, content,isComplete } = req.body;
 
     //Error message to client
-    const expectedProp = ['id', 'content'];
+    const expectedProp = ['id', 'content','isComplete'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
     missingProps && res.status(400).json({
         message: `missing properties : ${missingProps} `
@@ -74,6 +74,7 @@ app.put('/api/todo', (req, res) => { //handle Save
                 data.content = content;
                 data.isEditable = false;
                 data.errorMessage = false;
+                data.isComplete= isComplete
             }
         }
         return data;
