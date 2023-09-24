@@ -129,7 +129,7 @@ export const Todo = () => {
 			setTodo(response.data);
 		} catch (error) {
 			console.log(error);
-			console.log(`ERROR === ${error.response.data.message}`)
+			console.log(`ERROR === ${error.response.data.message}`);
 		}
 	};
 
