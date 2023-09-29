@@ -1,5 +1,5 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 const { handleErrorMessage } = require('../util');
 const router = express.Router();
 const Todo = require('../models/todoModel')
@@ -10,29 +10,31 @@ const Todo = require('../models/todoModel')
 let todoList = [];
 
 router.get('/', async (req, res) => {
-    // res.json(todoList);
-    const data = await Todo.find();
-    res.json(data)
-
+    try {
+        const data = await Todo.find();
+        res.json(data)
+    } catch (error) {
+        console.log(error);
+    }
 });
 
-router.post('/', async(req, res) => {
+router.post('/', async (req, res) => {
     const { ...rest } = req.body;
-    
-    //Error message to client
-    // const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
-    // const missingProps = handleErrorMessage(expectedProp, req.body);
-    // missingProps && res.status(400).json({
-    //     message: `missing properties : ${missingProps} `
-    // });
-    
-    // rest.id = uuidv4().slice(0, 8);
-    //  todoList.push(rest)
-    
-    // res.json(todoList);
+    // Error message to client
+    const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
+    const missingProps = handleErrorMessage(expectedProp, req.body);
+    missingProps && res.status(400).json({
+        message: `missing properties : ${missingProps} `
+    });
 
-    Todo.create(rest);
-    res.json('todo added successfully');
+    try {
+        await Todo.create(rest);
+        // res.json('todo added successfully');
+        res.json(await Todo.find());
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 //handle Edit       /*fix multiple edit-save bug*/
@@ -49,49 +51,53 @@ router.post('/', async(req, res) => {
 // });
 
 
-router.put('/', (req, res) => { //handle Save
-    const { id, content } = req.body;
+router.put('/', async (req, res) => { //handle Save
+    const { _id, content } = req.body;
 
     //Error message to client
-    const expectedProp = ['id', 'content'];
+    const expectedProp = ['_id', 'content'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
     missingProps && res.status(400).json({
         message: `missing properties : ${missingProps} `
     });
 
-    const updatedTodoList = todoList.map(data => {
-        if (data.id === id) {
-            if (content == '') {
-                data.errorMessage = 'task should not be empty';
-                data.isEditable = true;
-            } else {
-                data.content = content;
-                data.isEditable = false;
-                data.errorMessage = false;
-            }
+    try {
+        if(content ==''){
+        await Todo.findByIdAndUpdate(_id, {errorMessage: 'task should not be empty', isEditable: true});
+        res.json(await Todo.find());
         }
-        return data;
-    })
-    todoList = [...updatedTodoList];
-    res.json(todoList);
+        else{
+            await Todo.findByIdAndUpdate(_id, { content, isEditable:false, errorMessage:false });
+            res.json(await Todo.find());
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        })
+    }
+
 });
 
-router.delete('/', (req, res) => {
-    const { id } = req.body;
+router.delete('/', async(req, res) => {
+    const { _id } = req.body;
 
     //Error message to client
-    const expectedProp = ['id'];
+    const expectedProp = ['_id'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
     missingProps && res.status(400).json({
         message: `missing properties : ${missingProps} `
     });
 
-    const updatedTodoList = todoList.filter(data => {
-        return data.id !== id
-    });
-    todoList = [...updatedTodoList];
-    res.json(todoList);
+    try {
+        await Todo.findByIdAndDelete(_id);
+        res.json(await Todo.find());
+
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 
-module.exports = router;
+module.exports = router;  

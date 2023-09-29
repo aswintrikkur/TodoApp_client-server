@@ -32,6 +32,8 @@ export const Todo = () => {
 
 	useEffect(() => {
 		fetchTodoListAPI();
+		console.log(import.meta.env.VITE_API_URL);
+
 	}, []);
 
 	//----------Functions Definitions----------------
@@ -65,7 +67,7 @@ export const Todo = () => {
 	};
 
 	// 'Enter' button handle
-	const handleKeyDown = (event, id, index) => {
+	const handleKeyDown = (event, _id, index) => {
 		const { key } = event;
 		const { name } = event.target;
 
@@ -73,15 +75,15 @@ export const Todo = () => {
 			handleInputOnAdd();
 		}
 		if (key === "Enter" && name === "editTodo") {
-			handleSaveValue(id, index);
+			handleSaveValue(_id, index);
 		}
 	};
 
 	// Handle Todo-Item Delete
-	const handleDeleteItem = async (id) => {
+	const handleDeleteItem = async (_id) => {
 		try {
 			const response = await postTodoListAPI("DELETE", {
-				id,
+				_id,
 			});
 			setTodo(response.data);
 			const updatedContent = response.data.map((data) => data.content);
@@ -93,7 +95,7 @@ export const Todo = () => {
 	};
 
 	//Handle Todo-Item Edit
-	const handleItemEdit = async (id) => {
+	const handleItemEdit = async (_id) => {
 		/*fix multiple edit-save bug*/
 		// try {
 		// 	const response= await postTodoListAPI('PUT',{
@@ -106,25 +108,27 @@ export const Todo = () => {
 		// }
 
 		const editTodo = todo.map((data) => {
-			data.id === id && (data.isEditable = !data.isEditable);
+			data._id === _id && (data.isEditable = !data.isEditable);
 			return data;
 		});
 		setTodo(editTodo);
 	};
 
 	// onChange input handle of editTodo
-	const inputHandleOnChangeOfEdit = (event, id, index) => {
+	const inputHandleOnChangeOfEdit = (event, _id, index) => {
 		const updatedTempEdit = [...tempEdit];
 		updatedTempEdit[index] = event.target.value;
 		setTempEdit(updatedTempEdit);
 	};
 
 	//Handle 'Save' on Todo-Items
-	const handleSaveValue = async (id, index) => {
+	const handleSaveValue = async (_id, index) => {
+		console.log((todo.find(data=> ((data._id===_id).isComplete))));
 		try {
 			const response = await postTodoListAPI("PUT", {
-				id,
+				_id,
 				content: tempEdit[index],
+				// isComplete: (todo.filter(data=> ((data._id===_id).isComplete)))
 			});
 			setTodo(response.data);
 		} catch (error) {
@@ -134,18 +138,18 @@ export const Todo = () => {
 	};
 
 	//Handle 'Cancel' on Todo-Items
-	const handleCancelButton = (id, index) => {
+	const handleCancelButton = (_id, index) => {
 		const updatedTodo = todo.map((data) => {
-			data.id === id && ((tempEdit[index] = data.content), (data.isEditable = false), (data.errorMessage = false));
+			data._id === _id && ((tempEdit[index] = data.content), (data.isEditable = false), (data.errorMessage = false));
 			return data;
 		});
 		setTodo(updatedTodo);
 	};
 
 	// Handle task complete
-	const handleComplete = (event, id) => {
+	const handleComplete = (event, _id) => {
 		const todoUpdated = todo.map((data) => {
-			if (data.id === id) {
+			if (data._id === _id) {
 				event.target.checked ? (data.isComplete = true) : (data.isComplete = false);
 			}
 			return data;
@@ -176,7 +180,7 @@ export const Todo = () => {
 
 				<div className="todo-list">
 					{todo.map((data, index) => {
-						const { id } = data;
+						const { _id } = data;
 
 						return (
 							<TodoItem
@@ -184,7 +188,7 @@ export const Todo = () => {
 								handleItemEdit={handleItemEdit}
 								handleComplete={handleComplete}
 								todo={data}
-								key={data.id}
+								key={data._id}
 							>
 								<div className="edit-todo" /* passing as children */>
 									<input
@@ -193,16 +197,16 @@ export const Todo = () => {
 										id="edit-item"
 										value={tempEdit[index]}
 										onChange={(event) => {
-											inputHandleOnChangeOfEdit(event, id, index);
+											inputHandleOnChangeOfEdit(event, _id, index);
 										}}
-										onKeyDown={(event) => handleKeyDown(event, id, index)}
+										onKeyDown={(event) => handleKeyDown(event, _id, index)}
 										placeholder="Editing current todo item"
 									/>
 									<button
 										type="save"
 										className="save"
 										onClick={() => {
-											handleSaveValue(id, index);
+											handleSaveValue(_id, index);
 										}}
 									>
 										save
@@ -212,7 +216,7 @@ export const Todo = () => {
 										type="reset"
 										className="cancel"
 										onClick={() => {
-											handleCancelButton(id, index);
+											handleCancelButton(_id, index);
 										}}
 									>
 										cancel

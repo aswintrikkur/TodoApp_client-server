@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./TodoItem.css";
 
 export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, todo, children }) => {
-	const { id, content, isEditable, isComplete } = todo;
+	const { _id, content, isEditable, isComplete } = todo;
 
 	// console.log( `${id} = ${editSection}`)
 
@@ -11,16 +11,16 @@ export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, tod
 			<div className="todo-item">
 				{isEditable && children}
 				<div className="todo-label">
-					<input type="checkbox" name="" id={id} onClick={(event) => handleComplete(event, id)} />
-					<label htmlFor={id} style={{ textDecoration: isComplete ? "line-through" : "none" }}>
+					<input type="checkbox" name="" id={_id}   onClick={(event) => handleComplete(event, _id)} />
+					<label htmlFor={_id} style={{ textDecoration: isComplete ? "line-through" : "none" }}>
 						{content}
 					</label>
 				</div>
 				<div className="todo-buttons">
-					<button onClick={() => handleItemEdit(id)}>
+					<button onClick={() => handleItemEdit(_id)}>
 						<img src="../src/Images/image 7.png" alt="edit" />
 					</button>
-					<button onClick={() => handleDeleteItem(id)}>
+					<button onClick={() => handleDeleteItem(_id)}>
 						<img src="../src/Images/image 9.png" alt="delete" />
 					</button>
 				</div>
