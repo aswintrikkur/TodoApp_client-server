@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Todo.css";
-import { v4 as uuid } from "uuid";
 import { TodoItem } from "./TodoItem/TodoItem";
 import axios from "axios";
-import { API_URL, postTodoListAPI } from "../../api";
+import {  API_URL, postTodoListAPI } from "../../api";
 
 export const Todo = () => {
 	//----------State Declarations----------------
@@ -13,6 +12,7 @@ export const Todo = () => {
 	const [error, setError] = useState({
 		addTodo: false,
 	});
+
 
 	useEffect(() => {
 		console.log("tempEdit==", tempEdit);
@@ -33,7 +33,6 @@ export const Todo = () => {
 	useEffect(() => {
 		fetchTodoListAPI();
 		console.log(import.meta.env.VITE_API_URL);
-
 	}, []);
 
 	//----------Functions Definitions----------------
@@ -123,11 +122,13 @@ export const Todo = () => {
 
 	//Handle 'Save' on Todo-Items
 	const handleSaveValue = async (_id, index) => {
-		console.log((todo.find(data=> ((data._id===_id).isComplete))));
+		// const data = todo.find((data) => data._id === _id);
+		console.log(todo.find((data) => data._id === _id).isComplete);
 		try {
 			const response = await postTodoListAPI("PUT", {
 				_id,
 				content: tempEdit[index],
+				isComplete: (todo.find((data) => data._id === _id).isComplete)
 				// isComplete: (todo.filter(data=> ((data._id===_id).isComplete)))
 			});
 			setTodo(response.data);
@@ -172,9 +173,7 @@ export const Todo = () => {
 						onChange={inputHandleOnChange}
 						onKeyDown={handleKeyDown}
 					/>
-					<button type="submit" onClick={handleInputOnAdd}>
-						ADD TODO
-					</button>
+					<button type="submit" id="submit" onClick={handleInputOnAdd}></button>
 					{error.addTodo && <p className="error-message"> {error.addTodo} </p>}
 				</div>
 

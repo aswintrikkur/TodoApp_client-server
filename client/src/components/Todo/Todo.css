@@ -1,5 +1,6 @@
 .todo-container {
 	width: 500px;
+	/* width: 100vw; */
 	height: 612px;
 	background: #152431;
 	border-radius: 6px;
@@ -29,7 +30,8 @@
 	border-radius: 4px;
 	padding-left: 15px;
 }
-.input-container button {
+.input-container #submit {
+	content: '';
 	width: 95px;
 	height: 40px;
 	border-radius: 4px;
@@ -44,6 +46,16 @@
 	border: 1px solid rgba(255, 255, 255, 0.2);
 	color: #8fa8c1;
 }
+.input-container #submit::before {
+content: "ADD TODO";
+}
+/* .input-container #submit::after {
+	width: 40px;
+	margin-left: 10px;
+	font-size: 24px;
+	background-color: blueviolet;
+	display: none;
+} */
 .todo-list {
 	padding-top: 40px;
 	overflow: auto;
@@ -68,32 +80,89 @@
 	background-color: transparent;
 	padding-left: 15px;
 }
-.edit-todo button{
-width: 76px;
-height: 40px;
-background: #0C5488;
-border-radius: 4px;
+.edit-todo button {
+	width: 76px;
+	height: 40px;
+	background: #0c5488;
+	border-radius: 4px;
 
-font-style: normal;
-font-weight: 500;
-font-size: 12px;
-line-height: 14px;
-color: #8FA8C1;
-border: 1px solid rgba(255, 255, 255, 0.2)
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 14px;
+	color: #8fa8c1;
+	border: 1px solid rgba(255, 255, 255, 0.2);
 }
-.edit-todo .cancel{
-	background: #8FA8C1;
-	color: #0C5488;
-
+.edit-todo .cancel {
+	background: #8fa8c1;
+	color: #0c5488;
 }
 
-.error-message{
+.error-message {
 	color: red;
 	font-size: 14px;
 	text-align: start;
 	padding-left: 20px;
 	position: absolute;
 }
-.error-message-edit{
+.error-message-edit {
 	bottom: 0;
+}
+
+@media (max-width: 400px) {
+	.todo-container {
+		width: 100vw;
+		height: 100vh;
+	}
+	.todo-container h2 {
+		font-size: 40px;
+		margin: 50px;
+	}
+	.todo-container .input-container {
+		display: flex;
+		position: relative;
+	}
+	.input-container #newTodo {
+		width: 297px;
+		padding-left: 15px;
+	}
+	.input-container #submit {
+			width: 40px;
+			margin-left: 10px;
+			font-size: 24px;
+	}
+	.input-container #submit::before {
+		display: none;
+	}
+	.input-container #submit::after {
+		display: contents;
+		content: "+";
+	}
+	.input-container p {
+		display: none;
+	}
+	.input-container button:focus ~ p {
+		display: inline;
+	}
+	.todo-list {
+		margin-top: 60px;
+		margin-bottom: 30px;
+		overflow-y: auto;
+	}
+	.edit-todo {
+		width: 380px;
+		height: 100%;
+	}
+	.edit-todo input {
+		width: 280px;
+		padding: 0 15px;
+	}
+	.edit-todo button {
+		width: 40px;
+	}
+	.error-message {
+		font-size: 12px;
+		padding-left: 10px;
+		bottom: -18px;
+	}
 }
