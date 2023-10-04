@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Todo.css";
 import { TodoItem } from "./TodoItem/TodoItem";
 import axios from "axios";
-import {  API_URL, postTodoListAPI } from "../../api";
+import { API_URL, postTodoListAPI } from "../../api";
 
 export const Todo = () => {
 	//----------State Declarations----------------
@@ -13,7 +13,6 @@ export const Todo = () => {
 		addTodo: false,
 	});
 
-
 	useEffect(() => {
 		console.log("tempEdit==", tempEdit);
 		console.log("todo==", todo);
@@ -23,8 +22,9 @@ export const Todo = () => {
 	const fetchTodoListAPI = async () => {
 		try {
 			const response = await axios(API_URL);
-			setTodo(response.data);
-			setTempEdit(response.data.map((data) => data.content));
+			console.log(API_URL , response);
+			// setTodo(response.data);
+			// setTempEdit(response.data.map((data) => data.content));
 		} catch (error) {
 			console.log(error);
 		}
@@ -32,7 +32,6 @@ export const Todo = () => {
 
 	useEffect(() => {
 		fetchTodoListAPI();
-		console.log(import.meta.env.VITE_API_URL);
 	}, []);
 
 	//----------Functions Definitions----------------
@@ -128,7 +127,7 @@ export const Todo = () => {
 			const response = await postTodoListAPI("PUT", {
 				_id,
 				content: tempEdit[index],
-				isComplete: (todo.find((data) => data._id === _id).isComplete)
+				isComplete: todo.find((data) => data._id === _id).isComplete,
 				// isComplete: (todo.filter(data=> ((data._id===_id).isComplete)))
 			});
 			setTodo(response.data);

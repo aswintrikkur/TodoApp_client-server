@@ -11,12 +11,14 @@ app.use(cors());
 
 connectDB();
 
+
 const port = process.env.PORT || 3000;
+const server = process.env.SERVER_URL || `http://localhost:${port}`
 app.listen(port, () => {
-    console.log(`----- server started on  : http://localhost:${port}`);
+    console.log(`----- server started on  : ${server}`);
 })
 
-
+ 
 // -----------routes-------------
 app.use('/api/todo', todoRoute );
 

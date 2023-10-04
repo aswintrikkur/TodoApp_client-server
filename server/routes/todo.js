@@ -7,7 +7,11 @@ const Todo = require('../models/todoModel')
 
 
 //------------data------------
-let todoList = [];
+router.get('/test', async (req,res)=>{
+    res.json({
+        message: 'accessing api/todo route'
+    })
+} );
 
 router.get('/', async (req, res) => {
     try {
@@ -33,8 +37,7 @@ router.post('/', async (req, res) => {
             newTodo.save();
         */
         // res.json({message:'todo added successfully'});
-        // res.json(await Todo.find()); //! Do not use this. Pass response to fontend and do array manipulation in frondend
-        res.json(response);
+        res.json(await Todo.find()); //! Do not use this. Pass response to fontend and do array manipulation in frondend
     } catch (error) {
         res.status(400).json(error.message);
         console.log(error);
@@ -42,18 +45,7 @@ router.post('/', async (req, res) => {
 
 });
 
-//handle Edit       /*fix multiple edit-save bug*/
-// router.put('/',(req,res)=>{
-//     const{id,isEditable}=req.body;
-//     const updatedTodoList = todoList.map(data => {
-//         if (data.id === id) {
-//             data.isEditable=isEditable;
-//         }
-//         return data;
-//     })
-//     todoList = [...updatedTodoList];
-//     res.json(todoList);
-// });
+
 
 
 router.put('/', async (req, res) => { //handle Save

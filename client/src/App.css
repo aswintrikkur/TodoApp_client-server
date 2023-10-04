@@ -1,14 +1,18 @@
 #root {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 0 2rem;
-	text-align: center;
+	/* color: white; */
+}
+.app-container {
+	width: 100vw;
+	height: 100vh;
+	background-color: #c49f78;
+	/* background-color: #e5c6a8; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-@media (max-width: 400px) {
-	#root {
-		height: 100vh;
-		/* text-align: center; */
-    padding: 0;
+@media (max-width: 450px) {
+	.app-container{
+		background-color: transparent;
 	}
 }

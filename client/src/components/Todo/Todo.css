@@ -11,6 +11,7 @@
 }
 .todo-container h2 {
 	/* font-family: Roboto; */
+
 	font-size: 36px;
 	font-weight: 700;
 	line-height: 42px;
@@ -27,6 +28,7 @@
 	height: 40px;
 	background: #152431;
 	border: 1px solid rgba(143, 168, 193, 0.5);
+	/* color: rgba(143, 168, 193, 0.5); */
 	border-radius: 4px;
 	padding-left: 15px;
 }
@@ -109,14 +111,16 @@ content: "ADD TODO";
 	bottom: 0;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 450px) {
 	.todo-container {
 		width: 100vw;
 		height: 100vh;
+		box-shadow: none;
 	}
 	.todo-container h2 {
 		font-size: 40px;
-		margin: 50px;
+		margin: 40px;
+		margin-bottom: 30px;
 	}
 	.todo-container .input-container {
 		display: flex;
@@ -145,7 +149,7 @@ content: "ADD TODO";
 		display: inline;
 	}
 	.todo-list {
-		margin-top: 60px;
+		margin-top: 30px;
 		margin-bottom: 30px;
 		overflow-y: auto;
 	}

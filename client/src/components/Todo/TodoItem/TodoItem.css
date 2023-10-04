@@ -23,7 +23,7 @@
 	height: 23px;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 450px) {
 	.todo-item {
 		width: 380px;
 		min-height: 55px;
