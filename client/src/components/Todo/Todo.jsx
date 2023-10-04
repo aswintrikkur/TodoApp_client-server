@@ -13,18 +13,19 @@ export const Todo = () => {
 		addTodo: false,
 	});
 
+	// for debugging 
 	useEffect(() => {
-		console.log("tempEdit==", tempEdit);
-		console.log("todo==", todo);
+		// console.log("tempEdit==", tempEdit);
+		// console.log("todo==", todo);
 	}, [todo, tempEdit]);
 
 	//--------todo API data fetching----------
 	const fetchTodoListAPI = async () => {
 		try {
 			const response = await axios(API_URL);
-			console.log(API_URL , response);
-			// setTodo(response.data);
-			// setTempEdit(response.data.map((data) => data.content));
+			setTodo(response.data);
+			console.log("data fetched===", response.data);
+			setTempEdit(response.data.map((data) => data.content));
 		} catch (error) {
 			console.log(error);
 		}
@@ -58,8 +59,7 @@ export const Todo = () => {
 			setTodo(response.data);
 			setTempEdit(response.data.map((data) => data.content));
 		} catch (error) {
-			console.log(error);
-			console.log(`ERROR === ${error.response.data.message}`);
+			// error is handled in postTodoAPI function itself
 		}
 		setTempContent("");
 	};
@@ -86,25 +86,11 @@ export const Todo = () => {
 			setTodo(response.data);
 			const updatedContent = response.data.map((data) => data.content);
 			setTempEdit(updatedContent);
-		} catch (error) {
-			console.log(error);
-			console.log(`ERROR === ${error.response.data.message}`);
-		}
+		} catch (error) {}
 	};
 
 	//Handle Todo-Item Edit
-	const handleItemEdit = async (_id) => {
-		/*fix multiple edit-save bug*/
-		// try {
-		// 	const response= await postTodoListAPI('PUT',{
-		// 		id,
-		// 		isEditable:true
-		// 	})
-		// 	setTodo(response.data);
-		// } catch (error) {
-		// 	console.log(error);
-		// }
-
+	const handleItemEdit = async (_id) => {	//TODO:  fix multiple edit-save bug
 		const editTodo = todo.map((data) => {
 			data._id === _id && (data.isEditable = !data.isEditable);
 			return data;
@@ -121,20 +107,14 @@ export const Todo = () => {
 
 	//Handle 'Save' on Todo-Items
 	const handleSaveValue = async (_id, index) => {
-		// const data = todo.find((data) => data._id === _id);
-		console.log(todo.find((data) => data._id === _id).isComplete);
 		try {
 			const response = await postTodoListAPI("PUT", {
 				_id,
 				content: tempEdit[index],
 				isComplete: todo.find((data) => data._id === _id).isComplete,
-				// isComplete: (todo.filter(data=> ((data._id===_id).isComplete)))
 			});
 			setTodo(response.data);
-		} catch (error) {
-			console.log(error);
-			console.log(`ERROR === ${error.response.data.message}`);
-		}
+		} catch (error) {}
 	};
 
 	//Handle 'Cancel' on Todo-Items
@@ -147,7 +127,7 @@ export const Todo = () => {
 	};
 
 	// Handle task complete
-	const handleComplete = (event, _id) => {
+	const handleComplete = (event, _id) => { //! line-through on completed task changes when reloading. 
 		const todoUpdated = todo.map((data) => {
 			if (data._id === _id) {
 				event.target.checked ? (data.isComplete = true) : (data.isComplete = false);

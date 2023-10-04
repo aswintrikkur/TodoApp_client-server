@@ -27,10 +27,10 @@ router.post('/', async (req, res) => {
     // Error message to client
     const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
-    missingProps && res.status(400).json({
-        message: `missing properties : ${missingProps} `
-    });
-
+    if(missingProps){
+        return res.status(400).json({message: `missing properties : ${missingProps} `});
+    }
+    
     try {
         const response = await Todo.create(rest);
         /*  const newTodo= new Todo(rest);      //* alternate method for inserting data in DB
@@ -39,8 +39,8 @@ router.post('/', async (req, res) => {
         // res.json({message:'todo added successfully'});
         res.json(await Todo.find()); //! Do not use this. Pass response to fontend and do array manipulation in frondend
     } catch (error) {
-        res.status(400).json(error.message);
-        console.log(error);
+        // res.status(400).json(error.message);
+        // console.log(error);
     }
 
 });
@@ -54,9 +54,9 @@ router.put('/', async (req, res) => { //handle Save
     //Error message to client
     const expectedProp = ['_id', 'content', 'isComplete'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
-    missingProps && res.status(400).json({
-        message: `missing properties : ${missingProps} `
-    });
+    if(missingProps){
+        return res.status(400).json({message: `missing properties : ${missingProps} `});
+    }
 
     try {
         if (content == '') {
@@ -89,9 +89,9 @@ router.delete('/', async (req, res) => {
     //Error message to client
     const expectedProp = ['_id'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
-    missingProps && res.status(400).json({
-        message: `missing properties : ${missingProps} `
-    });
+    if(missingProps){
+        return res.status(400).json({message: `missing properties : ${missingProps} `});
+    }
 
     try {
         await Todo.findByIdAndDelete(_id);

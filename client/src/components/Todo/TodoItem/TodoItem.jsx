@@ -18,10 +18,10 @@ export const TodoItem = ({ handleDeleteItem, handleItemEdit, handleComplete, tod
 				</div>
 				<div className="todo-buttons">
 					<button onClick={() => handleItemEdit(_id)}>
-						<img src="../src/Images/image 7.png" alt="edit" />
+						<img src='/icons/edit.png' alt="edit" />
 					</button>
 					<button onClick={() => handleDeleteItem(_id)}>
-						<img src="../src/Images/image 9.png" alt="delete" />
+						<img src="/icons/delete.png" alt="delete" />
 					</button>
 				</div>
 				{/* {error.editTodo && children[1]} */}
