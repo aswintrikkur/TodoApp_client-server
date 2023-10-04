@@ -149,6 +149,7 @@ export const Todo = () => {
 						value={tempContent}
 						id="newTodo"
 						placeholder="New Todo"
+						autoComplete="off"
 						onChange={inputHandleOnChange}
 						onKeyDown={handleKeyDown}
 					/>
@@ -173,6 +174,7 @@ export const Todo = () => {
 										type="text"
 										name="editTodo"
 										id="edit-item"
+										autoComplete="off"
 										value={tempEdit[index]}
 										onChange={(event) => {
 											inputHandleOnChangeOfEdit(event, _id, index);
