@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const todoRoute = require('./routes/todo');
+
 const connectDB = require('./config/db');
+const {todoRoute} = require('./routes/todoRoute');
+const {userRoute} = require('./routes/userRoute');
 require('dotenv').config();
 
 const app = express();
@@ -20,6 +22,7 @@ app.listen(port, () => {
 
  
 // -----------routes-------------
+app.use('/api',userRoute)
 app.use('/api/todo', todoRoute );
 
 

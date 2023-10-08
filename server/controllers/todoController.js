@@ -1,37 +1,26 @@
-const express = require('express');
-// const { v4: uuidv4 } = require('uuid');
-const { handleErrorMessage } = require('../util');
-const router = express.Router();
-const Todo = require('../models/todoModel')
+const { handleErrorMessage } = require("../utils/handleMissingProps");
 
-
-
-//------------data------------
-router.get('/test', async (req,res)=>{
-    res.json({
-        message: 'accessing api/todo route'
-    })
-} );
-
-router.get('/', async (req, res) => {
+const getTodo = async (req, res) => {
     try {
         const data = await Todo.find();
         res.json(data)
     } catch (error) {
         res.status(400).json(error.message);
     }
-});
+}
 
-router.post('/', async (req, res) => {
-    const { ...rest } = req.body;
-    // Error message to client
-    const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
-    const missingProps = handleErrorMessage(expectedProp, req.body);
-    if(missingProps){
-        return res.status(400).json({message: `missing properties : ${missingProps} `});
-    }
-    
+const addTodo = async (req, res) => {
+
     try {
+
+        const { ...rest } = req.body;
+        // Error message to client
+        const expectedProp = ['content', 'isComplete', 'isEditable', 'errorMessage'];
+        const missingProps = handleErrorMessage(expectedProp, req.body);
+        if (missingProps) {
+            return res.status(400).json({ message: `missing properties : ${missingProps} ` });
+        }
+
         const response = await Todo.create(rest);
         /*  const newTodo= new Todo(rest);      //* alternate method for inserting data in DB
             newTodo.save();
@@ -43,19 +32,17 @@ router.post('/', async (req, res) => {
         // console.log(error);
     }
 
-});
+}
 
 
-
-
-router.put('/', async (req, res) => { //handle Save
+const editTodo = async (req, res) => { //handle Save
     const { _id, content, isComplete } = req.body;
 
     //Error message to client
     const expectedProp = ['_id', 'content', 'isComplete'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
-    if(missingProps){
-        return res.status(400).json({message: `missing properties : ${missingProps} `});
+    if (missingProps) {
+        return res.status(400).json({ message: `missing properties : ${missingProps} ` });
     }
 
     try {
@@ -81,16 +68,16 @@ router.put('/', async (req, res) => { //handle Save
         })
     }
 
-});
+}
 
-router.delete('/', async (req, res) => {
+const deleteTodo = async (req, res) => {
     const { _id } = req.body;
 
     //Error message to client
     const expectedProp = ['_id'];
     const missingProps = handleErrorMessage(expectedProp, req.body);
-    if(missingProps){
-        return res.status(400).json({message: `missing properties : ${missingProps} `});
+    if (missingProps) {
+        return res.status(400).json({ message: `missing properties : ${missingProps} ` });
     }
 
     try {
@@ -102,7 +89,6 @@ router.delete('/', async (req, res) => {
         // console.log(error);
     }
 
-})
+}
 
-
-module.exports = router;  
+module.exports = { getTodo, addTodo, editTodo, deleteTodo }
