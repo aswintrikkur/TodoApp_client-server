@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema(
         },
         emailId: {type: String,unique: true},
 
-        password: { type: String, required: true }
+        password: { type: String, required: true },
+        mobile: { type: Number, required: true },
+
     }
 );
 

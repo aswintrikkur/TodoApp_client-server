@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 
 const connectDB = require('./config/db');
-const {todoRoute} = require('./routes/todoRoute');
-const {userRoute} = require('./routes/userRoute');
+const { todoRoute } = require('./routes/todoRoute');
+const { userRoute } = require('./routes/userRoute');
 require('dotenv').config();
 
 const app = express();
@@ -20,10 +20,10 @@ app.listen(port, () => {
     console.log(`----- server started on  : ${server}`);
 })
 
- 
+
 // -----------routes-------------
-app.use('/api',userRoute)
-app.use('/api/todo', todoRoute );
+app.use('/api/user', userRoute)
+app.use('/api/todo', todoRoute);
 
 
 app.all('*', (req, res) => {

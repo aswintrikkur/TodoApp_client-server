@@ -1,3 +1,4 @@
+const { Todo } = require("../models/todoModel");
 const { handleErrorMessage } = require("../utils/handleMissingProps");
 
 const getTodo = async (req, res) => {

@@ -18,4 +18,4 @@ const todoSchema = new mongoose.Schema(     // schema will check when we add dat
     // { strict: false }
 );
 
-module.exports = mongoose.model('Todo', todoSchema);
+module.exports = {Todo: mongoose.model('Todo', todoSchema)};
